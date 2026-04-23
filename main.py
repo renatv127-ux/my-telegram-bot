@@ -102,6 +102,9 @@ async def start_cmd(message: types.Message):
 @dp.callback_query(F.data == "check_sub")
 async def process_download(callback: types.CallbackQuery):
     user_id = callback.from_user.id
+    cursor.execute("INSERT OR IGNORE INTO users (user_id, username, full_name) VALUES (?, ?, ?)",
+                   (user_id, callback.from_user.username, callback.from_user.full_name))
+    conn.commit()
     if not await is_subscribed(user_id):
         await callback.answer("❌ Сначала подпишись на канал!", show_alert=True)
         return
