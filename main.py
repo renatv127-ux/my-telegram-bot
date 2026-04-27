@@ -157,6 +157,9 @@ async def process_dl(callback: types.CallbackQuery):
         await callback.answer("❌ Бот выключен.", show_alert=True); return
 
     user_id = callback.from_user.id
+    cursor.execute("INSERT OR IGNORE INTO users (user_id, username, full_name) VALUES (?, ?, ?)",
+                   (user_id, callback.from_user.username, callback.from_user.full_name))
+    conn.commit()
     if not await is_subscribed(user_id):
         await callback.answer("❌ Подпишись на канал!", show_alert=True); return
     
